@@ -1,12 +1,16 @@
 import { useState } from "react";
 import Image from "next/image";
+import Head from "next/head"
 export default function Home({ images }) {
   const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
   const width = 400;
   return (
     <div className="body">
-      
+      <Head>
+      <link rel="icon" href="/images/at.png" type="image/png" />
+        <title>Postagem igual a do Instagram</title>
+      </Head>
       <style jsx>
         {`
           h1{
