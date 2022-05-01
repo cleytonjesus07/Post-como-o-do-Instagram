@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Head from "next/head"
 export default function Home({ images }) {
+  const [numero,setNumero] = useState();
+  const [hour,setHour] = useState();
   const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
+  
   const width = 400;
+
+useEffect(()=>{
+  const numero = (Math.floor(Math.random() * 100) !== 0 || Math.floor(Math.random() * 100) !== 1) ? Math.floor(Math.random() * 100) : 10;
+  const now = new Date().getHours();
+  setNumero(numero);
+  setHour(now);
+},[])
   return (
     <div className="body">
       <Head>
@@ -47,10 +57,8 @@ export default function Home({ images }) {
 
           .desc {
             display: inline-block;
-            margin-top: 20px;
             width: 100%;
-            font-size: 0.7em;
-
+            font-size: 12px;
             padding: 5px;
             height: ${show ? 30 : "auto"};
           }
@@ -146,13 +154,98 @@ export default function Home({ images }) {
             font-size: 0.7em;
             cursor: pointer;
           }
+
+          .likes{
+            display:flex;
+            align-items:center;
+            width:100%;
+            padding:0 10px;
+            padding-top:20px;
+          }
+
+          
+
+          .likes .imgs{
+            display:flex;
+            align-items:center;
+            position:relative;
+            height:inherit;
+          }
+
+          .likes .imgs > div{
+              margin: 0 -2px;
+          }
+
+          .rounded{
+            overflow:hidden;
+            border-radius:100%;
+          }
+
+          .likes > span{
+            font-size:12px;
+            margin-left:4px;
+          }
+
+          .likes span .highlight{
+            font-weight:bold;
+            cursor:pointer;
+          }
+
+          .time{
+            font-size:10px;
+            color:gray;
+            padding:5px;
+          }
+
+          .comments{
+            font-size:12px;
+            font-weight:lighter;
+            padding: 2px 5px;
+            color:gray;
+          }
+          .messages{
+            padding:0 5px;
+            margin:2px 0;
+            font-size:12px;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1; /* Definimos quantas linhas queremos */
+            display: -webkit-box;
+            overflow: hidden;
+          }
+
+          .messages span{
+            font-weight:bold;
+            margin-right:2px;
+          }
+
+          .Input{
+            width:100%;
+          
+          }
+
+          .Input textarea{
+            display:flex;
+            resize:none;
+            outline:none;
+            width:inherit;
+            border:none;
+            min-height:50px;
+            padding:5px;
+            font-size:14px;
+          }
+
+          .Input textarea::placeholder{
+            font-family:--apple-system,Arial;
+          }
+
+          
         `}
       </style>
-      <h1>Post como do Instagram</h1>
+      <h1>Post como a do Instagram</h1>
       <div className="post">
         <div className="perfil">
           <a href="https://www.instagram.com/cleyton_jesus07/">
-            <Image style={{borderRadius: 100}} width={30} height={30} src="/images/at.png" alt="imagem de perfil" />
+            <Image style={{borderRadius: 100}} width={30} height={30} src={images[0]} alt="imagem de perfil" />
             <span style={{marginLeft:10}}>cleyton_jesus07</span>
           </a>
         </div>
@@ -209,6 +302,14 @@ export default function Home({ images }) {
             ))}
           </div>
         </div>
+        <div className="likes" title={"Apenas ilustrativo"}>
+          <div className="imgs">
+              {images.map((img,i) => {
+                return (i !== 0) && <div key={i}><Image loading="lazy"  style={{borderRadius:100,zIndex:-i}} layout="fixed"  src={img} width={20} height={20}/></div>
+              })}
+          </div>
+          <span>Curtido por <span className="highlight">cleytonJesus</span> e <span className="highlight">outras 39 pessoas</span></span>
+        </div>
         <div className="desc">
           <p>
             <a href="https://www.instagram.com/cleyton_jesus07/">
@@ -254,6 +355,21 @@ export default function Home({ images }) {
             ver mais
           </span>
         </div>
+        <span className="comments" title={"Link apenas ilustrativo"}>Ver todos os {numero} comentários</span>
+        <div className="messages">
+            <p><span>randomIlustrator</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+            rutrum urna quis turpis scelerisque, sit amet iaculis enim</p>
+        </div>
+        <div className="messages">
+            <p><span>InvisibleSketcher</span> Donec imperdiet dolor eu ipsum ornare faucibus. Aliquam
+            pretium dapibus ligula id lacinia. Donec blandit lorem porttitor,
+            convallis tortor sit amet, facilisis diam. Pellentesque elementum
+            bibendum tortor, vel eleifend nunc hendrerit id.</p>
+        </div>
+        <time className="time">Há {hour} horas </time>
+        <div className="Input" title={"Input apenas ilustrativo"}>
+            <textarea  autoCorrect={"off"} autoComplete={"off"} type={"text"} placeholder={"Adicione um comentário..."}></textarea>
+        </div>
       </div>
       <footer style={{fontSize:10,textAlign:"center",margin:"10px 0"}}>
         Feito com Next
@@ -261,6 +377,8 @@ export default function Home({ images }) {
     </div>
   );
 }
+
+
 
 export const getStaticProps = () => {
   return {
