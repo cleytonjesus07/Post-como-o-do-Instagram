@@ -6,16 +6,26 @@ export default function Home({ images }) {
   const [hour,setHour] = useState();
   const [index, setIndex] = useState(0);
   const [show, setShow] = useState(false);
-  
+/*   const videoRef = useRef(); */
   const width = 400;
-
 useEffect(()=>{
   const numero = (Math.floor(Math.random() * 100) !== 0 || Math.floor(Math.random() * 100) !== 1) ? Math.floor(Math.random() * 100) : 10;
   const now = new Date().getHours();
   setNumero(numero);
   setHour(now);
+ /*  videoRef && (videoRef.current.currentTime = videoRef.current.currentTime / 1.5); */
 },[])
-  return (
+
+/* const playVideo = async(old) => {
+  if(old === 5 && videoRef){   
+    videoRef.current.play();
+  }else{
+    videoRef.current.load();
+    videoRef.current.currentTime = videoRef.current.currentTime / 1.5;
+  }
+} */
+
+return (
     <div className="body">
       <Head>
       <link rel="icon" href="/images/at.png" type="image/png" />
@@ -31,11 +41,13 @@ useEffect(()=>{
             position: relative;
             border: 1px solid grey;
             height: auto;
-            width: ${width}px;
+            
+            max-width: ${width}px;
+            
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            margin: 30px 0;
+           
             border-radius: 2px;
           }
 
@@ -238,6 +250,13 @@ useEffect(()=>{
             font-family:--apple-system,Arial;
           }
 
+          video{
+            object-fit:contain;
+          }
+
+          video::-webkit-media-controls {
+            display:none !important;
+          }
           
         `}
       </style>
@@ -256,6 +275,7 @@ useEffect(()=>{
                 <span
                   onClick={() =>
                     setIndex((old) => {
+                      /* playVideo(old); */
                       if (old <= 0) {
                         return (old = images.length - 1);
                       }
@@ -269,6 +289,8 @@ useEffect(()=>{
                 <span
                   onClick={() =>
                     setIndex((old) => {
+                     /*  playVideo(old); */
+
                       if (old >= images.length - 1) {
                         return 0;
                       }
@@ -295,17 +317,29 @@ useEffect(()=>{
             </>
           )}
           <div className="slider" style={{width:`${width * images.length}px`}}>
-            {images.map((img, i) => (
-              <div key={i} className="imageTag">
-                <Image priority layout="fill" objectFit="contain"  alt={`imagem ${i + 1}`} src={img} />
-              </div>
-            ))}
+            {images.map((img, i) => {
+
+              if(img.indexOf(".png") > -1){
+                return (
+                  <div key={i} className="imageTag">
+                    <Image priority layout="fill" objectFit="contain"  alt={`imagem ${i + 1}`} src={img} />
+                  </div>
+                )
+              }/* else if(img.indexOf(".mp4") > -1){
+                return(
+                  <div key={i} className="imageTag">
+                    <video ref={videoRef} style={{width:"100%",height:"100%"}} alt={`video ${i + 1}`} src={img} controls></video>
+                  </div>
+                )
+              } */
+
+            })}
           </div>
         </div>
         <div className="likes" title={"Apenas ilustrativo"}>
           <div className="imgs">
               {images.map((img,i) => {
-                return (i !== 0) && <div key={i}><Image loading="lazy"  style={{borderRadius:100,zIndex:-i}} layout="fixed"  src={img} width={20} height={20}/></div>
+                return (i >= 1 && i <= 3) && <div key={i}><Image loading="lazy"  style={{borderRadius:100,zIndex:-i}} layout="fixed"  src={img} width={20} height={20}/></div>
               })}
           </div>
           <span>Curtido por <span className="highlight">cleytonJesus</span> e <span className="highlight">outras 39 pessoas</span></span>
@@ -388,6 +422,8 @@ export const getStaticProps = () => {
         "/images/axieexp.png",
         "/images/esboço.png",
         "/images/Scarlatinha.png",
+        "/images/Denise.png",
+        /* "/videos/tlou2.mp4" */
       ],
     },
   };
